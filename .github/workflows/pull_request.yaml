@@ -9,7 +9,7 @@ env:
   TF_VAR_endpoint: ${{ secrets.TF_PVE_PROVIDER_ENDPOINT }}
   TF_VAR_api_token: ${{ secrets.TF_PVE_PROVIDER_API_TOKEN }}
   TERRAFORM_VERSION: ~1.12
-  WORKING_DIRECTORY: ./infrastructure/terraform
+  WORKING_DIRECTORY: ./terraform
 
 
 jobs:
