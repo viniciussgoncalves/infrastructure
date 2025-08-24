@@ -1,0 +1,38 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  TF_VAR_endpoint: ${{ secrets.TF_PVE_PROVIDER_ENDPOINT }}
+  TF_VAR_api_token: ${{ secrets.TF_PVE_PROVIDER_API_TOKEN }}
+  TERRAFORM_VERSION: ~1.12
+  WORKING_DIRECTORY: ./infrastructure/terraform
+
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init -no-color
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Terraform Plan
+        run: terraform plan -no-color
+        working-directory: ${{ env.WORKING_DIRECTORY }}
