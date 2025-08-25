@@ -1,0 +1,48 @@
+# EditorConfig: https://editorconfig.org/
+
+# Root configuration for the entire project
+root = true
+
+# Default configuration for all files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Terraform files
+[*.{tf,tfvars}]
+indent_style = space
+indent_size = 2
+
+# Markdown documentation files
+[*.md]
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = false
+
+# JSON configuration files
+[*.{json,json.tpl}]
+indent_style = space
+indent_size = 2
+
+# YAML files
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# HCL files
+[*.{hcl,nomad}]
+indent_style = space
+indent_size = 2
+
+# Shell script files
+[*.{sh,bash}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+
+# Configuration files
+[.gitignore]
+indent_style = space
+indent_size = 2
