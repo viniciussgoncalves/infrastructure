@@ -8,6 +8,9 @@ on:
 env:
   TF_VAR_endpoint: ${{ secrets.TF_PVE_PROVIDER_ENDPOINT }}
   TF_VAR_api_token: ${{ secrets.TF_PVE_PROVIDER_API_TOKEN }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
   TERRAFORM_VERSION: ~1.12
   WORKING_DIRECTORY: ./terraform
 
