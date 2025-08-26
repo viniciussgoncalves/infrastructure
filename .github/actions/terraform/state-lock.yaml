@@ -31,13 +31,15 @@ on:
       AWS_ENDPOINT_URL_S3:
         description: "AWS endpoint URL for S3"
         required: true
-    env:
+    inputs:
       TERRAFORM_VERSION:
         description: "Terraform version"
         required: true
+        type: string
       WORKING_DIRECTORY:
         description: "Working directory"
         required: true
+        type: string
 
 jobs:
   terraform-unlock:
