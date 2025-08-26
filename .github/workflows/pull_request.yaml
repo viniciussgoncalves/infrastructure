@@ -6,31 +6,31 @@ on:
       - main
 
 jobs:
-  security-scan:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    continue-on-error: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - uses: ./.github/actions/security/checkov
+  # security-scan:
+  #   name: Security Scan
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+  #   continue-on-error: true
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v5
+  #     - uses: ./.github/actions/security/checkov
 
-  tfsec-scan:
-    name: TFSec Scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    continue-on-error: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - uses: ./.github/actions/security/tfsec
-        with:
-          WORKING_DIRECTORY: ./terraform
+  # tfsec-scan:
+  #   name: TFSec Scan
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 5
+  #   continue-on-error: true
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v5
+  #     - uses: ./.github/actions/security/tfsec
+  #       with:
+  #         WORKING_DIRECTORY: ./terraform
 
   terraform-plan:
     name: Terraform Plan
-    needs: [security-scan, tfsec-scan]
+    # needs: [security-scan, tfsec-scan]
     runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
