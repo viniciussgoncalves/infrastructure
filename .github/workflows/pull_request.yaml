@@ -31,7 +31,7 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     needs: [security-scan, tfsec-scan]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
       - name: Checkout

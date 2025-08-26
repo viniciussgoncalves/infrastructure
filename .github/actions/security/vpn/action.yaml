@@ -1,5 +1,5 @@
 name: 'Set up VPN'
-description: 'Configure WireGuard VPN connection'
+description: 'Configure WireGuard VPN connection using linuxserver/wireguard'
 
 inputs:
   WG_CONFIG_FILE:
@@ -9,7 +9,24 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up WireGuard Connection
-      uses: niklaskeerl/easy-wireguard-action@v2
-      with:
-        WG_CONFIG_FILE: ${{ inputs.WG_CONFIG_FILE }}
+    - name: Create WireGuard configuration
+      steps:
+        - run: |
+              sudo apt install resolvconf
+              sudo apt install wireguard
+              echo "${{ inputs.WG_CONFIG_FILE }}" > wg0.conf
+              sudo chmod 600 wg0.conf
+              echo "setting config"
+              sudo wg-quick up ./wg0.conf
+          shell: bash
+
+    - name: Test VPN Connection
+      shell: bash
+      run: |
+        # Testar conectividade com ping
+        echo "Testando conectividade com ping..."
+        ping -c 5 10.100.0.250
+
+        # Testar conectividade com curl
+        echo "Testando conectividade com curl..."
+        curl -s https://pve.home.viniciusgoncalves.com

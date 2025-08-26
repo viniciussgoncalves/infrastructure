@@ -14,6 +14,7 @@ jobs:
       - uses: ./.github/actions/security/vpn
         with:
           WG_CONFIG_FILE: ${{ secrets.WG_CONFIG_FILE }}
+
       - name: Test ping private IP
         shell: bash
         run: ping -c 5 10.100.0.250
