@@ -1,0 +1,17 @@
+name: 'TFSec'
+description: 'Run security scanning with TFSec'
+
+inputs:
+  WORKING_DIRECTORY:
+    description: 'Working directory for analysis'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Terraform Security Scan
+      uses: triat/terraform-security-scan@v3
+      with:
+        tfsec_actions_working_dir: ${{ inputs.WORKING_DIRECTORY }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}

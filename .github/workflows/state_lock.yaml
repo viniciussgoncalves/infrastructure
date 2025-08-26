@@ -1,0 +1,25 @@
+name: Terraform State Lock
+
+on:
+  workflow_dispatch:
+    inputs:
+      lock_id:
+        description: "Terraform lock ID"
+        required: true
+        type: string
+
+jobs:
+  terraform-unlock:
+    name: Terraform State Lock
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - uses: ./.github/actions/terraform/state-lock
+        with:
+          TERRAFORM_VERSION: ~1.12
+          WORKING_DIRECTORY: ./terraform
+          LOCK_ID: ${{ github.event.inputs.lock_id }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
