@@ -1,22 +1,23 @@
 name: tfsec
 
 on:
-  # push:
-  #   branches: [ "main", "master" ]
-  # pull_request:
-  #   branches: [ "main", "master" ]
-
-  workflow_dispatch:
+  workflow_call:
+    env:
+      WORKING_DIRECTORY:
+        required: true
 
 jobs:
   tfsec:
     name: tfsec
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     env:
-      WORKING_DIRECTORY: ./terraform
+      WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Terraform Security Scan
         uses: triat/terraform-security-scan@v3
