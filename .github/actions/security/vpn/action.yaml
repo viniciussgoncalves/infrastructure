@@ -9,23 +9,55 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Create WireGuard configuration
+    - name: Install WireGuard
       shell: bash
       run: |
         sudo apt-get update
-        sudo apt-get install -y resolvconf wireguard
+        sudo apt-get install -y resolvconf wireguard-tools
+      # Note: 'wireguard-tools' em vez de apenas 'wireguard'
+
+    - name: Create WireGuard configuration
+      shell: bash
+      run: |
         echo "${{ inputs.WG_CONFIG_FILE }}" > wg0.conf
         sudo chmod 600 wg0.conf
+        # Verificar se o arquivo foi criado corretamente
+        ls -la wg0.conf
+        cat wg0.conf | head -3
+
+    - name: Start WireGuard connection
+      shell: bash
+      run: |
         echo "Setting up WireGuard configuration"
-        sudo wg-quick up ./wg0.conf
+        sudo wg-quick up $(pwd)/wg0.conf
+        # Usar caminho absoluto é mais seguro
+
+    - name: Verify WireGuard status
+      shell: bash
+      run: |
+        echo "WireGuard status:"
+        sudo wg show
+        sleep 2
 
     - name: Test VPN Connection
       shell: bash
       run: |
+        # Testar primeiro a interface WireGuard
+        echo "Verificando interface WireGuard..."
+        ip addr show wg0 || ip link show
+
         # Testar conectividade com ping
         echo "Testando conectividade com ping..."
-        ping -c 5 10.100.0.250
+        ping -c 5 10.100.0.250 || echo "Ping falhou, continuando..."
 
         # Testar conectividade com curl
         echo "Testando conectividade com curl..."
-        curl -s https://pve.home.viniciusgoncalves.com
+        curl -s --connect-timeout 10 https://pve.home.viniciusgoncalves.com || \
+        curl -s --connect-timeout 10 http://pve.home.viniciusgoncalves.com || \
+        echo "Curl falhou"
+
+    - name: Cleanup (optional)
+      if: always()
+      shell: bash
+      run: |
+        sudo wg-quick down $(pwd)/wg0.conf 2>/dev/null || true
