@@ -20,7 +20,9 @@ jobs:
     name: Terraform Apply
     needs: [security-scan, tfsec-scan]
     uses: ./.github/actions/terraform/terraform-apply.yaml
-
+    with:
+      TERRAFORM_VERSION: ~1.12
+      WORKING_DIRECTORY: ./terraform
     secrets:
       TF_PVE_PROVIDER_ENDPOINT: ${{ secrets.TF_PVE_PROVIDER_ENDPOINT }}
       TF_PVE_PROVIDER_API_TOKEN: ${{ secrets.TF_PVE_PROVIDER_API_TOKEN }}
