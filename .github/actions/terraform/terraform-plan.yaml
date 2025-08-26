@@ -13,11 +13,15 @@ on:
         required: true
       AWS_ENDPOINT_URL_S3:
         required: true
-    env:
+    inputs:
       TERRAFORM_VERSION:
+        description: "Versão do Terraform a ser usada"
         required: true
+        type: string
       WORKING_DIRECTORY:
+        description: "Diretório contendo os arquivos Terraform"
         required: true
+        type: string
 
 jobs:
   terraform-plan:
@@ -31,8 +35,8 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
-      TERRAFORM_VERSION: ${{ env.TERRAFORM_VERSION }}
-      WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+      TERRAFORM_VERSION: ${{ inputs.TERRAFORM_VERSION }}
+      WORKING_DIRECTORY: ${{ inputs.WORKING_DIRECTORY }}
 
     steps:
       - name: Checkout

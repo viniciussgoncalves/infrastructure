@@ -8,18 +8,18 @@ on:
 jobs:
   security-scan:
     name: Security Scan
-    uses: ./.github/actions/security/checkov.yaml
+    uses: ./.github/actions/security/checkov.yaml@main
 
   tfsec-scan:
     name: TFSec Scan
-    uses: ./.github/actions/security/tfsec.yaml
+    uses: ./.github/actions/security/tfsec.yaml@main
     with:
       WORKING_DIRECTORY: ./terraform
 
   terraform-apply:
     name: Terraform Apply
     needs: [security-scan, tfsec-scan]
-    uses: ./.github/actions/terraform/terraform-apply.yaml
+    uses: ./.github/actions/terraform/terraform-apply.yaml@main
     with:
       TERRAFORM_VERSION: ~1.12
       WORKING_DIRECTORY: ./terraform
