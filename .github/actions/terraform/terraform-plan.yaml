@@ -1,0 +1,62 @@
+name: Terraform Plan
+
+on:
+  workflow_call:
+    secrets:
+      TF_PVE_PROVIDER_ENDPOINT:
+        required: true
+      TF_PVE_PROVIDER_API_TOKEN:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_ENDPOINT_URL_S3:
+        required: true
+    env:
+      TERRAFORM_VERSION:
+        required: true
+      WORKING_DIRECTORY:
+        required: true
+
+jobs:
+  terraform-plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    env:
+      TF_VAR_endpoint: ${{ secrets.TF_PVE_PROVIDER_ENDPOINT }}
+      TF_VAR_api_token: ${{ secrets.TF_PVE_PROVIDER_API_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+      TERRAFORM_VERSION: ${{ env.TERRAFORM_VERSION }}
+      WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init -no-color
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Terraform Plan
+        run: terraform plan -no-color -out .planfile
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Post PR Comment
+        uses: borchero/terraform-plan-comment@v2
+        with:
+          token: ${{ github.token }}
+          planfile: .planfile
