@@ -34,6 +34,9 @@ runs:
           echo "setting config"
           sudo wg-quick up ./wg0.conf
           echo "nameserver 10.200.10.1" | sudo tee /etc/resolv.conf
+          sudo wg show
+          curl https://pve.home.viniciusgoncalves.com
+          ping -c 5 10.250.0.10
       shell: bash
 
     # - name: Set up WireGuard
