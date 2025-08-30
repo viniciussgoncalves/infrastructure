@@ -2,34 +2,41 @@ name: 'Set up VPN'
 description: 'Configure WireGuard VPN'
 
 inputs:
-  ENDPOINT:
-    description: 'WireGuard endpoint'
-    required: true
-  ENDPOINT_PUBLIC_KEY:
-    description: 'WireGuard endpoint public key'
-    required: true
-  IPS:
-    description: 'WireGuard IPS'
-    required: true
-  ALLOWED_IPS:
-    description: 'WireGuard allowed IPs'
-    required: true
-  PRIVATE_KEY:
-    description: 'WireGuard private key'
-    required: true
-  PRESHARED_KEY:
-    description: 'WireGuard preshared key'
-    required: true
+    # ENDPOINT:
+    #   description: 'WireGuard endpoint'
+    #   required: true
+    # ENDPOINT_PUBLIC_KEY:
+    #   description: 'WireGuard endpoint public key'
+    #   required: true
+    # IPS:
+    #   description: 'WireGuard IPS'
+    #   required: true
+    # ALLOWED_IPS:
+    #   description: 'WireGuard allowed IPs'
+    #   required: true
+    # PRIVATE_KEY:
+    #   description: 'WireGuard private key'
+    #   required: true
+    # PRESHARED_KEY:
+    #   description: 'WireGuard preshared key'
+    #   required: true
+    WG_CONFIG:
+      description: 'WireGuard configuration file'
+      required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Set up WireGuard
-      uses: egor-tensin/setup-wireguard@v1
+    - name: Set up WireGuard Connection
+      uses: Cardtonic-Technologies/ttt-wireguard@main
       with:
-        endpoint: '${{ inputs.ENDPOINT }}'
-        endpoint_public_key: '${{ inputs.ENDPOINT_PUBLIC_KEY }}'
-        ips: '${{ inputs.IPS }}'
-        allowed_ips: '${{ inputs.ALLOWED_IPS }}'
-        private_key: '${{ inputs.PRIVATE_KEY }}'
-        preshared_key: '${{ inputs.PRESHARED_KEY }}'
+        WG_CONFIG: ${{ inputs.WG_CONFIG }}
+    # - name: Set up WireGuard
+    #   uses: egor-tensin/setup-wireguard@v1
+    #   with:
+    #     endpoint: '${{ inputs.ENDPOINT }}'
+    #     endpoint_public_key: '${{ inputs.ENDPOINT_PUBLIC_KEY }}'
+    #     ips: '${{ inputs.IPS }}'
+    #     allowed_ips: '${{ inputs.ALLOWED_IPS }}'
+    #     private_key: '${{ inputs.PRIVATE_KEY }}'
+    #     preshared_key: '${{ inputs.PRESHARED_KEY }}'
