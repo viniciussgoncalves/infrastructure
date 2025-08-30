@@ -20,17 +20,22 @@ inputs:
     # PRESHARED_KEY:
     #   description: 'WireGuard preshared key'
     #   required: true
-    WG_CONFIG:
+    CONFIG_FILE:
       description: 'WireGuard configuration file'
       required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Set up WireGuard Connection
-      uses: Cardtonic-Technologies/ttt-wireguard@main
-      with:
-        WG_CONFIG: ${{ inputs.WG_CONFIG }}
+    - run: |
+          sudo apt install resolvconf iproute2 wireguard
+          echo "${{ inputs.CONFIG_FILE }}" > wg0.conf
+          sudo chmod 600 wg0.conf
+          echo "setting config"
+          sudo wg-quick up ./wg0.conf
+          echo "nameserver 10.200.10.1" | sudo tee /etc/resolv.conf
+      shell: bash
+
     # - name: Set up WireGuard
     #   uses: egor-tensin/setup-wireguard@v1
     #   with:
