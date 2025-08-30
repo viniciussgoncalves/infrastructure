@@ -1,0 +1,50 @@
+name: 'Set up VPN'
+description: 'Configure WireGuard VPN'
+
+inputs:
+    # ENDPOINT:
+    #   description: 'WireGuard endpoint'
+    #   required: true
+    # ENDPOINT_PUBLIC_KEY:
+    #   description: 'WireGuard endpoint public key'
+    #   required: true
+    # IPS:
+    #   description: 'WireGuard IPS'
+    #   required: true
+    # ALLOWED_IPS:
+    #   description: 'WireGuard allowed IPs'
+    #   required: true
+    # PRIVATE_KEY:
+    #   description: 'WireGuard private key'
+    #   required: true
+    # PRESHARED_KEY:
+    #   description: 'WireGuard preshared key'
+    #   required: true
+    CONFIG_FILE:
+      description: 'WireGuard configuration file'
+      required: true
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+          sudo apt install resolvconf iproute2 wireguard
+          echo "${{ inputs.CONFIG_FILE }}" > wg0.conf
+          sudo chmod 600 wg0.conf
+          echo "setting config"
+          sudo wg-quick up ./wg0.conf
+          echo "nameserver 10.200.10.1" | sudo tee /etc/resolv.conf
+          sudo wg show
+          curl https://pve.home.viniciusgoncalves.com
+          ping -c 5 10.250.0.10
+      shell: bash
+
+    # - name: Set up WireGuard
+    #   uses: egor-tensin/setup-wireguard@v1
+    #   with:
+    #     endpoint: '${{ inputs.ENDPOINT }}'
+    #     endpoint_public_key: '${{ inputs.ENDPOINT_PUBLIC_KEY }}'
+    #     ips: '${{ inputs.IPS }}'
+    #     allowed_ips: '${{ inputs.ALLOWED_IPS }}'
+    #     private_key: '${{ inputs.PRIVATE_KEY }}'
+    #     preshared_key: '${{ inputs.PRESHARED_KEY }}'

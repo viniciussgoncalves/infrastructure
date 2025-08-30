@@ -1,31 +1,25 @@
 name: Set up VPN
 
 on:
-  workflow_call:
-    secrets:
-      WG_CONFIG_FILE:
-        required: true
+  workflow_dispatch:
 
 jobs:
   wireguard:
     name: Set up VPN
     runs-on: ubuntu-latest
     timeout-minutes: 5
-
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-
-      - name: Set up WireGuard Connection
-        uses: niklaskeerl/easy-wireguard-action@v2
+      - uses: ./.github/actions/security/vpn
         with:
           WG_CONFIG_FILE: ${{ secrets.WG_CONFIG_FILE }}
 
-      - name: Test curl public IP
-        run: curl https://www.google.com
-
       - name: Test ping private IP
+        shell: bash
         run: ping -c 5 10.100.0.250
 
       - name: Test curl private IP dns
+        shell: bash
         run: curl https://pve.home.viniciusgoncalves.com
+

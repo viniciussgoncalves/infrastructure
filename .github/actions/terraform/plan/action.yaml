@@ -1,0 +1,66 @@
+name: 'Terraform Plan'
+description: 'Execute terraform plan command'
+
+inputs:
+  TERRAFORM_VERSION:
+    description: 'Terraform version to use'
+    required: true
+  WORKING_DIRECTORY:
+    description: 'Directory containing Terraform files'
+    required: true
+  TF_VAR_endpoint:
+    description: 'PVE provider endpoint'
+    required: true
+  TF_VAR_api_token:
+    description: 'PVE provider API token'
+    required: true
+  AWS_ACCESS_KEY_ID:
+    description: 'AWS Access Key ID'
+    required: true
+  AWS_SECRET_ACCESS_KEY:
+    description: 'AWS Secret Access Key'
+    required: true
+  AWS_ENDPOINT_URL_S3:
+    description: 'AWS S3 endpoint URL'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.TERRAFORM_VERSION }}
+
+    - name: Terraform Init
+      shell: bash
+      run: terraform init -no-color
+      working-directory: ${{ inputs.WORKING_DIRECTORY }}
+      env:
+        TF_VAR_endpoint: ${{ inputs.TF_VAR_endpoint }}
+        TF_VAR_api_token: ${{ inputs.TF_VAR_api_token }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+        AWS_ENDPOINT_URL_S3: ${{ inputs.AWS_ENDPOINT_URL_S3 }}
+
+    - name: Terraform Validate
+      shell: bash
+      run: terraform validate -no-color
+      working-directory: ${{ inputs.WORKING_DIRECTORY }}
+
+    - name: Terraform Plan
+      shell: bash
+      run: terraform plan -no-color -out .planfile
+      working-directory: ${{ inputs.WORKING_DIRECTORY }}
+      env:
+        TF_VAR_endpoint: ${{ inputs.TF_VAR_endpoint }}
+        TF_VAR_api_token: ${{ inputs.TF_VAR_api_token }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+        AWS_ENDPOINT_URL_S3: ${{ inputs.AWS_ENDPOINT_URL_S3 }}
+
+    - name: Post PR Comment
+      uses: borchero/terraform-plan-comment@v2
+      with:
+        token: ${{ github.token }}
+        planfile: ${{ inputs.WORKING_DIRECTORY }}/.planfile
