@@ -39,7 +39,12 @@ jobs:
       - name: Set up VPN
         uses: ./.github/actions/security/vpn
         with:
-          WG_CONFIG_FILE: ${{ secrets.WG_CONFIG_FILE }}
+          ENDPOINT: ${{ secrets.WG_ENDPOINT }}
+          ENDPOINT_PUBLIC_KEY: ${{ secrets.WG_ENDPOINT_PUBLIC_KEY }}
+          IPS: ${{ secrets.WG_IPS }}
+          ALLOWED_IPS: ${{ secrets.WG_ALLOWED_IPS }}
+          PRIVATE_KEY: ${{ secrets.WG_PRIVATE_KEY }}
+          PRESHARED_KEY: ${{ secrets.WG_PRESHARED_KEY }}
       - uses: ./.github/actions/terraform/plan
         with:
           TERRAFORM_VERSION: ~1.12
